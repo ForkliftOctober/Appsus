@@ -2,6 +2,8 @@
 
 @import './setup/variables.css';
 /* @import './setup/fonts.css'; */
+/* @import url(setup/typography.css); */
+@import './setup/typography.css';
 
 /* Basics */
 
