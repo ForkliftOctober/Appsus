@@ -1,0 +1,13 @@
+.mail-preview {
+	display: grid;
+}
+
+.mail-preview img {
+	justify-self: end;
+	max-width: 70%;
+	transition: 300ms;
+}
+
+.mail-preview img:hover {
+	background-color: red;
+}
