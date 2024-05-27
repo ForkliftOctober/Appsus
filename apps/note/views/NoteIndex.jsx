@@ -14,7 +14,7 @@ const notes = [
         type: 'NoteImg',
         isPinned: false,
         info: {
-            url: 'http://some-img/me',
+            url: 'https://www.ynet.co.il/PicServer2/24012010/2522593/bobi_gd.jpg',
             title: 'Bobi and Me',
         },
         style: { backgroundColor: '#f00d' },
