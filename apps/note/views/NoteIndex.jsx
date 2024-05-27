@@ -49,7 +49,7 @@ const NoteImg = ({ note }) => (
 
 const NoteTodos = ({ note }) => (
     <div className='note-card'>
-        <h3>{note.info.title}</h3>
+        <h4>{note.info.title}</h4>
         <ul>
             {note.info.todos.map((todo, index) => (
                 <li key={index}>
@@ -61,27 +61,55 @@ const NoteTodos = ({ note }) => (
 )
 
 export function NoteIndex() {
-    console.log(notes)
+    const pinnedNotes = notes.filter(note => note.isPinned)
+    const regularNotes = notes.filter(note => !note.isPinned)
+
     return (
         <div className='note-index'>
             <input type='text' placeholder='Take a note...' className='note-input' />
-            <div className='note-container'>
-                {notes.map(note => {
-                    switch (note.type) {
-                        case 'NoteTxt':
-                            return <NoteTxt key={note.id} note={note} />
-                        case 'NoteImg':
-                            return <NoteImg key={note.id} note={note} />
-                        case 'NoteTodos':
-                            return <NoteTodos key={note.id} note={note} />
-                        default:
-                            return (
-                                <div key={note.id} className='note-card'>
-                                    Unknown Note Type
-                                </div>
-                            )
-                    }
-                })}
+
+            <div className='pinned-container'>
+                <h3>Pinned Notes</h3>
+                <div className='note-container'>
+                    {pinnedNotes.map(note => {
+                        switch (note.type) {
+                            case 'NoteTxt':
+                                return <NoteTxt key={note.id} note={note} />
+                            case 'NoteImg':
+                                return <NoteImg key={note.id} note={note} />
+                            case 'NoteTodos':
+                                return <NoteTodos key={note.id} note={note} />
+                            default:
+                                return (
+                                    <div key={note.id} className='note-card'>
+                                        Unknown Note Type
+                                    </div>
+                                )
+                        }
+                    })}
+                </div>
+            </div>
+
+            <div className='regular-container'>
+                <h3>Notes</h3>
+                <div className='note-container'>
+                    {regularNotes.map(note => {
+                        switch (note.type) {
+                            case 'NoteTxt':
+                                return <NoteTxt key={note.id} note={note} />
+                            case 'NoteImg':
+                                return <NoteImg key={note.id} note={note} />
+                            case 'NoteTodos':
+                                return <NoteTodos key={note.id} note={note} />
+                            default:
+                                return (
+                                    <div key={note.id} className='note-card'>
+                                        Unknown Note Type
+                                    </div>
+                                )
+                        }
+                    })}
+                </div>
             </div>
         </div>
     )
