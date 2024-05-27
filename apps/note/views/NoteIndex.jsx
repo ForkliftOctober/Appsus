@@ -5,7 +5,9 @@ const notes = [
         type: 'NoteTxt',
         isPinned: true,
         style: { backgroundColor: '#f00d' },
-        info: { txt: 'Fullstack Me Baby!' },
+        info: {
+            txt: 'Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! ',
+        },
     },
     {
         id: 'n102',
@@ -25,13 +27,41 @@ const notes = [
             title: 'Get my stuff together',
             todos: [
                 { txt: 'Driving license', doneAt: null },
+                { txt: 'Keeping at it!', doneAt: null },
                 { txt: 'Coding power', doneAt: 187111111 },
             ],
         },
     },
 ]
 
+const NoteTxt = ({ note }) => (
+    <div className='note-card' style={{ backgroundColor: note.style.backgroundColor }}>
+        {note.info.txt}
+    </div>
+)
+
+const NoteImg = ({ note }) => (
+    <div className='note-card' style={{ backgroundColor: note.style.backgroundColor }}>
+        <img src={note.info.url} alt={note.info.title} />
+        <p>{note.info.title}</p>
+    </div>
+)
+
+const NoteTodos = ({ note }) => (
+    <div className='note-card'>
+        <h3>{note.info.title}</h3>
+        <ul>
+            {note.info.todos.map((todo, index) => (
+                <li key={index}>
+                    {todo.txt} - {todo.doneAt ? 'Done' : 'Pending'}
+                </li>
+            ))}
+        </ul>
+    </div>
+)
+
 export function NoteIndex() {
+    console.log(notes)
     return (
         <div className='note-index'>
             <input type='text' placeholder='Take a note...' className='note-input' />
@@ -39,39 +69,11 @@ export function NoteIndex() {
                 {notes.map(note => {
                     switch (note.type) {
                         case 'NoteTxt':
-                            return (
-                                <div
-                                    key={note.id}
-                                    className='note-card'
-                                    style={{ backgroundColor: note.style.backgroundColor }}
-                                >
-                                    {note.info.txt}
-                                </div>
-                            )
+                            return <NoteTxt key={note.id} note={note} />
                         case 'NoteImg':
-                            return (
-                                <div
-                                    key={note.id}
-                                    className='note-card'
-                                    style={{ backgroundColor: note.style.backgroundColor }}
-                                >
-                                    <img src={note.info.url} alt={note.info.title} />
-                                    <p>{note.info.title}</p>
-                                </div>
-                            )
+                            return <NoteImg key={note.id} note={note} />
                         case 'NoteTodos':
-                            return (
-                                <div key={note.id} className='note-card'>
-                                    <h3>{note.info.title}</h3>
-                                    <ul>
-                                        {note.info.todos.map((todo, index) => (
-                                            <li key={index}>
-                                                {todo.txt} - {todo.doneAt ? 'Done' : 'Pending'}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            )
+                            return <NoteTodos key={note.id} note={note} />
                         default:
                             return (
                                 <div key={note.id} className='note-card'>
