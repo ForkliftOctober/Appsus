@@ -1,4 +1,4 @@
-const notes = [
+const initialNotes = [
     {
         id: 'n101',
         createdAt: 1112222,
@@ -35,20 +35,20 @@ const notes = [
 ]
 
 const NoteTxt = ({ note }) => (
-    <div className='note-card' style={{ backgroundColor: note.style.backgroundColor }}>
+    <div className='note-card' style={note.style || {}}>
         {note.info.txt}
     </div>
 )
 
 const NoteImg = ({ note }) => (
-    <div className='note-card' style={{ backgroundColor: note.style.backgroundColor }}>
+    <div className='note-card' style={note.style || {}}>
         <img src={note.info.url} alt={note.info.title} />
         <p>{note.info.title}</p>
     </div>
 )
 
 const NoteTodos = ({ note }) => (
-    <div className='note-card'>
+    <div className='note-card' style={note.style || {}}>
         <h4>{note.info.title}</h4>
         <ul>
             {note.info.todos.map((todo, index) => (
@@ -61,56 +61,87 @@ const NoteTodos = ({ note }) => (
 )
 
 export function NoteIndex() {
+    const [notes, setNotes] = React.useState(() => {
+        const savedNotes = localStorage.getItem('notes')
+        return savedNotes ? JSON.parse(savedNotes) : initialNotes
+    })
+
+    React.useEffect(() => {
+        localStorage.setItem('notes', JSON.stringify(notes))
+    }, [notes])
+
+    const [currentNote, setCurrentNote] = React.useState('')
+    const textareaRef = React.useRef(null)
+
+    const handleChange = event => {
+        setCurrentNote(event.target.value)
+        textareaRef.current.style.height = 'auto'
+        textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px'
+    }
+
+    React.useEffect(() => {
+        const handleOutsideClick = event => {
+            if (currentNote.trim() && !textareaRef.current.contains(event.target)) {
+                const newNote = {
+                    id: 'n' + new Date().getTime(),
+                    createdAt: Date.now(),
+                    type: 'NoteTxt',
+                    isPinned: false,
+                    info: {
+                        txt: currentNote.trim(),
+                    },
+                }
+                setNotes(prevNotes => [...prevNotes, newNote])
+                setCurrentNote('')
+                textareaRef.current.style.height = 'auto'
+            }
+        }
+
+        document.addEventListener('click', handleOutsideClick)
+        return () => document.removeEventListener('click', handleOutsideClick)
+    }, [currentNote])
+
     const pinnedNotes = notes.filter(note => note.isPinned)
     const regularNotes = notes.filter(note => !note.isPinned)
 
     return (
         <div className='note-index'>
-            <input type='text' placeholder='Take a note...' className='note-input' />
+            <textarea
+                ref={textareaRef}
+                className='note-input'
+                placeholder='Take a note...'
+                value={currentNote}
+                onChange={handleChange}
+                style={{ resize: 'none', overflow: 'hidden' }}
+                rows={1}
+            ></textarea>
 
             <div className='pinned-container'>
                 <h3>Pinned Notes</h3>
-                <div className='note-container'>
-                    {pinnedNotes.map(note => {
-                        switch (note.type) {
-                            case 'NoteTxt':
-                                return <NoteTxt key={note.id} note={note} />
-                            case 'NoteImg':
-                                return <NoteImg key={note.id} note={note} />
-                            case 'NoteTodos':
-                                return <NoteTodos key={note.id} note={note} />
-                            default:
-                                return (
-                                    <div key={note.id} className='note-card'>
-                                        Unknown Note Type
-                                    </div>
-                                )
-                        }
-                    })}
-                </div>
+                <div className='note-container'>{pinnedNotes.map(note => renderNote(note))}</div>
             </div>
 
             <div className='regular-container'>
                 <h3>Notes</h3>
-                <div className='note-container'>
-                    {regularNotes.map(note => {
-                        switch (note.type) {
-                            case 'NoteTxt':
-                                return <NoteTxt key={note.id} note={note} />
-                            case 'NoteImg':
-                                return <NoteImg key={note.id} note={note} />
-                            case 'NoteTodos':
-                                return <NoteTodos key={note.id} note={note} />
-                            default:
-                                return (
-                                    <div key={note.id} className='note-card'>
-                                        Unknown Note Type
-                                    </div>
-                                )
-                        }
-                    })}
-                </div>
+                <div className='note-container'>{regularNotes.map(note => renderNote(note))}</div>
             </div>
         </div>
     )
+}
+
+function renderNote(note) {
+    switch (note.type) {
+        case 'NoteTxt':
+            return <NoteTxt key={note.id} note={note} />
+        case 'NoteImg':
+            return <NoteImg key={note.id} note={note} />
+        case 'NoteTodos':
+            return <NoteTodos key={note.id} note={note} />
+        default:
+            return (
+                <div key={note.id} className='note-card'>
+                    Unknown Note Type
+                </div>
+            )
+    }
 }
