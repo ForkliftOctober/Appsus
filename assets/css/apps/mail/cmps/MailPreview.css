@@ -1,0 +1,21 @@
+.mail-preview {
+	display: flex;
+	cursor: pointer;
+}
+
+h3 {
+	font-weight: normal;
+}
+
+.mail-preview img:hover {
+	background-color: red;
+}
+
+.mail-unread {
+	font-weight: bold;
+	color: red;
+}
+
+.mail-read {
+	font-weight: normal;
+}
