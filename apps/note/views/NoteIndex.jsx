@@ -34,21 +34,24 @@ const initialNotes = [
     },
 ]
 
-const NoteActions = ({ noteId, onColorChange, onCopy, onTogglePin, isPinned }) => (
+const NoteActions = ({ noteId, onColorChange, onCopy, onTogglePin, onDelete, isPinned }) => (
     <div className='note-actions'>
+        <button onClick={() => onTogglePin(noteId)} title={isPinned ? 'Unpin Note' : 'Pin Note'}>
+            <i className='fa-solid fa-thumbtack'></i>
+        </button>
         <button onClick={() => onColorChange(noteId)} title='Change Color'>
-            <i class='fa-solid fa-palette'></i>
+            <i className='fa-solid fa-palette'></i>
         </button>
         <button onClick={() => onCopy()} title='Copy Note'>
-            <i class='fa-regular fa-copy'></i>
+            <i className='fa-regular fa-copy'></i>
         </button>
-        <button onClick={() => onTogglePin(noteId)} title={isPinned ? 'Unpin Note' : 'Pin Note'}>
-            <i class='fa-solid fa-thumbtack'></i>
+        <button onClick={() => onDelete(noteId)} title='Delete Note'>
+            <i className='fa-solid fa-trash'></i>
         </button>
     </div>
 )
 
-const NoteTxt = ({ note, onColorChange, onCopy, onTogglePin }) => (
+const NoteTxt = ({ note, onColorChange, onCopy, onTogglePin, onDelete }) => (
     <div className='note-card' style={note.style || {}}>
         {note.info.txt}
         <NoteActions
@@ -56,12 +59,13 @@ const NoteTxt = ({ note, onColorChange, onCopy, onTogglePin }) => (
             onColorChange={onColorChange}
             onCopy={() => onCopy(note)}
             onTogglePin={onTogglePin}
+            onDelete={onDelete}
             isPinned={note.isPinned}
         />
     </div>
 )
 
-const NoteImg = ({ note, onColorChange, onCopy, onTogglePin }) => (
+const NoteImg = ({ note, onColorChange, onCopy, onTogglePin, onDelete }) => (
     <div className='note-card' style={note.style || {}}>
         <img src={note.info.url} alt={note.info.title} />
         <p>{note.info.title}</p>
@@ -70,12 +74,13 @@ const NoteImg = ({ note, onColorChange, onCopy, onTogglePin }) => (
             onColorChange={onColorChange}
             onCopy={() => onCopy(note)}
             onTogglePin={onTogglePin}
+            onDelete={onDelete}
             isPinned={note.isPinned}
         />
     </div>
 )
 
-const NoteTodos = ({ note, onColorChange, onCopy, onTogglePin }) => (
+const NoteTodos = ({ note, onColorChange, onCopy, onTogglePin, onDelete }) => (
     <div className='note-card' style={note.style || {}}>
         <h4>{note.info.title}</h4>
         <ul>
@@ -90,6 +95,7 @@ const NoteTodos = ({ note, onColorChange, onCopy, onTogglePin }) => (
             onColorChange={onColorChange}
             onCopy={() => onCopy(note)}
             onTogglePin={onTogglePin}
+            onDelete={onDelete}
             isPinned={note.isPinned}
         />
     </div>
