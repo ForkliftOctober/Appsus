@@ -34,20 +34,48 @@ const initialNotes = [
     },
 ]
 
-const NoteTxt = ({ note }) => (
-    <div className='note-card' style={note.style || {}}>
-        {note.info.txt}
+const NoteActions = ({ noteId, onColorChange, onCopy, onTogglePin, isPinned }) => (
+    <div className='note-actions'>
+        <button onClick={() => onColorChange(noteId)} title='Change Color'>
+            <i class='fa-solid fa-palette'></i>
+        </button>
+        <button onClick={() => onCopy()} title='Copy Note'>
+            <i class='fa-regular fa-copy'></i>
+        </button>
+        <button onClick={() => onTogglePin(noteId)} title={isPinned ? 'Unpin Note' : 'Pin Note'}>
+            <i class='fa-solid fa-thumbtack'></i>
+        </button>
     </div>
 )
 
-const NoteImg = ({ note }) => (
+const NoteTxt = ({ note, onColorChange, onCopy, onTogglePin }) => (
+    <div className='note-card' style={note.style || {}}>
+        {note.info.txt}
+        <NoteActions
+            noteId={note.id}
+            onColorChange={onColorChange}
+            onCopy={() => onCopy(note)}
+            onTogglePin={onTogglePin}
+            isPinned={note.isPinned}
+        />
+    </div>
+)
+
+const NoteImg = ({ note, onColorChange, onCopy, onTogglePin }) => (
     <div className='note-card' style={note.style || {}}>
         <img src={note.info.url} alt={note.info.title} />
         <p>{note.info.title}</p>
+        <NoteActions
+            noteId={note.id}
+            onColorChange={onColorChange}
+            onCopy={() => onCopy(note)}
+            onTogglePin={onTogglePin}
+            isPinned={note.isPinned}
+        />
     </div>
 )
 
-const NoteTodos = ({ note }) => (
+const NoteTodos = ({ note, onColorChange, onCopy, onTogglePin }) => (
     <div className='note-card' style={note.style || {}}>
         <h4>{note.info.title}</h4>
         <ul>
@@ -57,6 +85,13 @@ const NoteTodos = ({ note }) => (
                 </li>
             ))}
         </ul>
+        <NoteActions
+            noteId={note.id}
+            onColorChange={onColorChange}
+            onCopy={() => onCopy(note)}
+            onTogglePin={onTogglePin}
+            isPinned={note.isPinned}
+        />
     </div>
 )
 

@@ -1,4 +1,7 @@
 .note-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     background-color: #fff;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
@@ -81,4 +84,28 @@
 .regular-container h4 {
     color: #202124;
     font-size: 15px;
+}
+
+.note-card .note-actions {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+}
+
+.note-card button {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.note-card button:hover {
+    background-color: rgba(0, 0, 0, 0.1);
 }
