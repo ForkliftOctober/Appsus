@@ -121,3 +121,10 @@
     opacity: 1;
     pointer-events: auto;
 }
+
+@media (max-width: 1024px), (orientation: portrait) {
+    .note-card .note-actions {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
