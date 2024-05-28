@@ -1,10 +1,10 @@
 body {
 	margin: 0;
-	color: black;
-	font-family: sans-serif;
-	/* font-family: Roboto, sans-serif; */
-	/* font-family: roboto, sans-serif; */
-	margin-bottom: 1rem;
+	-ms-overflow-style: none;
+}
+
+body::-webkit-scrollbar {
+	display: none;
 }
 
 h1,
