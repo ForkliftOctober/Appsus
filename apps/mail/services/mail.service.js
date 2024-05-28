@@ -4,7 +4,6 @@ import { storageService } from '../../../services/async-storage.service.js'
 const MAIL_KEY = 'mailDB'
 _createMails()
 
-console.log('util loaded')
 export const mailService = {
 	query,
 	get,
@@ -15,6 +14,7 @@ export const mailService = {
 	getSenderStats,
 	getFilterFromSearchParams,
 }
+
 // For Debug (easy access from console):
 // window.cs = mailService
 
@@ -95,8 +95,8 @@ function _createMail(sender) {
 	mail.sentAt = utilService.getRandomIntInclusive(155113393059, 155118393059)
 	mail.removedAt = null
 	mail.sender = sender
-	// mail.from = {sender}+'@'+{sender}+'.com'
-	mail.from = 'momo@momo.com'
+	mail.from = _createEmailName()
+	// mail.from = 'momo@momo.com'
 	mail.to = 'user@appsus.com'
 	console.log('mail: ', mail)
 	return mail
@@ -120,4 +120,12 @@ function _getMailCountBySenderMap(mails) {
 		return map
 	}, {})
 	return mailCountBySenderMap
+}
+
+function _createEmailName() {
+	const mails = ['giba@avehu.mh', 'zuswo@vafzumi.gb', 'piwusmo@epu.ba', 'nes@guvtu.qa']
+	const randomIndex = utilService.getRandomIntInclusive(0, mails.length - 1)
+	const mailService = mails[randomIndex]
+	console.log('mailService: ', mailService)
+	return mailService
 }

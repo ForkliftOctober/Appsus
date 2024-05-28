@@ -1,13 +1,21 @@
 .mail-preview {
 	display: flex;
+	cursor: pointer;
 }
 
-.mail-preview img {
-	justify-self: end;
-	max-width: 70%;
-	transition: 300ms;
+h3 {
+	font-weight: normal;
 }
 
 .mail-preview img:hover {
 	background-color: red;
+}
+
+.mail-unread {
+	font-weight: bold;
+	color: red;
+}
+
+.mail-read {
+	font-weight: normal;
 }

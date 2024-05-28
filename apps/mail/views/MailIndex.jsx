@@ -21,20 +21,16 @@ export function MailIndex() {
 	}, [filterBy, setSearchParams])
 
 	function removeMail(mailId) {
-		setIsLoading(true)
 		mailService
 			.remove(mailId)
 			.then(() => {
-				utilService.animateCSS('fadeAway').then(() => {
-					setMails(prevMails => prevMails.filter(mail => mail.id !== mailId))
-				})
-				showSuccessMsg(`Mail (${mailId}) removed successfully!`)
+				setMails(prevMails => prevMails.filter(mail => mailId !== mail.id))
+				showSuccessMsg('Mail has been successfully removed!')
 			})
-			.catch(err => {
-				console.log('err:', err)
-				showErrorMsg('There was a problem')
+			.catch(() => {
+				showErrorMsg(`couldn't remove mail`)
+				navigate('/mail')
 			})
-			.finally(() => setIsLoading(false))
 	}
 
 	function onSetFilterBy(newFilter) {

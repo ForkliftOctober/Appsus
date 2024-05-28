@@ -10,7 +10,8 @@ export function MailList({ mails, onRemove, isLoading }) {
 				{mails.map(mail => (
 					<li key={mail.id}>
 						<MailPreview mail={mail} />
-						<button onClick={() => onRemove(mail.id)}>x</button>
+						<button onClick={() => onRemove(mail.id)}>X</button>
+						{/* <button onClick={() => onRead(mail.id)}>R</button> */}
 						<Link to={`/mail/${mail.id}`}>
 							<button>Details</button>
 						</Link>
