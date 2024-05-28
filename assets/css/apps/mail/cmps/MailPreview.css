@@ -1,5 +1,5 @@
 .mail-preview {
-	display: grid;
+	display: flex;
 }
 
 .mail-preview img {

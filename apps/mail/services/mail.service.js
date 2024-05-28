@@ -1,9 +1,10 @@
-import { utilService } from './util.service.js'
-import { storageService } from './async-storage.service.js'
+import { utilService } from '../../../services/util.service.js'
+import { storageService } from '../../../services/async-storage.service.js'
 
 const MAIL_KEY = 'mailDB'
 _createMails()
 
+console.log('util loaded')
 export const mailService = {
 	query,
 	get,
@@ -11,7 +12,6 @@ export const mailService = {
 	save,
 	getEmptyMail,
 	getDefaultFilter,
-	getSpeedStats,
 	getSenderStats,
 	getFilterFromSearchParams,
 }
@@ -23,10 +23,6 @@ function query(filterBy = {}) {
 		if (filterBy.txt) {
 			const regExp = new RegExp(filterBy.txt, 'i')
 			mails = mails.filter(mail => regExp.test(mail.sender))
-		}
-
-		if (filterBy.minSpeed) {
-			mails = mails.filter(mail => mail.maxSpeed >= filterBy.minSpeed)
 		}
 
 		return mails
@@ -52,18 +48,17 @@ function save(mail) {
 	}
 }
 
-function getEmptyMail(sender = '', maxSpeed = '') {
-	return { sender, maxSpeed }
+function getEmptyMail(sender = '') {
+	return { sender }
 }
 
-function getDefaultFilter(filterBy = { txt: '', minSpeed: 0 }) {
-	return { txt: filterBy.txt, minSpeed: filterBy.minSpeed }
+function getDefaultFilter(filterBy = { txt: '' }) {
+	return { txt: filterBy.txt }
 }
 
 function getFilterFromSearchParams(searchParams) {
 	return {
 		txt: searchParams.get('txt') || '',
-		minSpeed: +searchParams.get('minSpeed') || '',
 	}
 }
 
@@ -92,26 +87,19 @@ function _createMails() {
 }
 
 function _createMail(sender) {
-	const mail = getEmptyMail(sender, maxSpeed)
+	const mail = getEmptyMail(sender)
 	mail.id = utilService.makeId()
-	mail.subject = utilService.makeLorem(getRandomIntInclusive(5, 20))
-	mail.body = utilService.makeLorem(getRandomIntInclusive(5, 100))
+	mail.subject = utilService.makeLorem(utilService.getRandomIntInclusive(5, 20))
+	mail.body = utilService.makeLorem(utilService.getRandomIntInclusive(5, 100))
 	mail.isRead = false
 	mail.sentAt = utilService.getRandomIntInclusive(155113393059, 155118393059)
 	mail.removedAt = null
 	mail.sender = sender
+	// mail.from = {sender}+'@'+{sender}+'.com'
 	mail.from = 'momo@momo.com'
 	mail.to = 'user@appsus.com'
 	console.log('mail: ', mail)
 	return mail
-}
-
-function getSpeedStats() {
-	return storageService.query(MAIL_KEY).then(mails => {
-		const mailCountBySpeedMap = _getMailCountBySpeedMap(mails)
-		const data = Object.keys(mailCountBySpeedMap).map(speedName => ({ title: speedName, value: mailCountBySpeedMap[speedName] }))
-		return data
-	})
 }
 
 function getSenderStats() {
@@ -123,19 +111,6 @@ function getSenderStats() {
 		}))
 		return data
 	})
-}
-
-function _getMailCountBySpeedMap(mails) {
-	const mailCountBySpeedMap = mails.reduce(
-		(map, mail) => {
-			if (mail.maxSpeed < 120) map.slow++
-			else if (mail.maxSpeed < 200) map.normal++
-			else map.fast++
-			return map
-		},
-		{ slow: 0, normal: 0, fast: 0 }
-	)
-	return mailCountBySpeedMap
 }
 
 function _getMailCountBySenderMap(mails) {

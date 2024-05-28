@@ -1,6 +1,7 @@
 const { Link } = ReactRouterDOM
 
-import { MailPreview } from '../apps/mail/cmps/MailPreview.jsx'
+import { MailPreview } from './MailPreview.jsx'
+import { utilService } from '../../../services/util.service.js'
 
 export function MailList({ mails, onRemove, isLoading }) {
 	return (

@@ -13,12 +13,14 @@ export function MailFilter({ filterBy, onFilter }) {
 		setFilterByToEdit(prevFilterBy => ({ ...prevFilterBy, [name]: value }))
 	}
 
-	const { txt, minSpeed } = filterByToEdit
+	const { txt } = filterByToEdit
+
 	return (
 		<section className='mail-filter'>
 			<h3>Filter</h3>
-			<input onChange={handleChange} value={txt} name='txt' type='text' placeholder='mail' />
-			<input onChange={handleChange} value={minSpeed} name='minSpeed' type='number' placeholder='speed' />
+			{/* <input onChange={handleChange} value={txt} name='txt' type='text' placeholder='mail' />  */}
 		</section>
 	)
 }
+
+// todo fix values

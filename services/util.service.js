@@ -6,6 +6,8 @@ export const utilService = {
 	padNum,
 	getDayName,
 	getMonthName,
+	loadFromStorage,
+	saveToStorage,
 }
 
 function makeId(length = 6) {
@@ -56,4 +58,19 @@ function getDayName(date, locale) {
 function getMonthName(date) {
 	const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 	return monthNames[date.getMonth()]
+}
+
+// STORAGE
+function loadFromStorage(key) {
+	var val = localStorage.getItem(key)
+	return JSON.parse(val)
+}
+
+export const storageService = {
+	loadFromStorage,
+	saveToStorage,
+}
+
+function saveToStorage(key, val) {
+	localStorage.setItem(key, JSON.stringify(val))
 }

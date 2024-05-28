@@ -3,10 +3,10 @@ const { Link, useSearchParams } = ReactRouterDOM
 
 import { mailService } from '../services/mail.service.js'
 
-import { MailList } from '../apps/mail/cmps/MailList.jsx'
-import { MailFilter } from '../apps/mail/cmps/MailFilter.jsx'
-import { eventBusService, showErrorMsg, showSuccessMsg } from '../services/event-bus.service.js'
-import { utilService } from '../services/util.service.js'
+import { MailList } from '../cmps/MailList.jsx'
+import { MailFilter } from '../cmps/MailFilter.jsx'
+import { eventBusService, showErrorMsg, showSuccessMsg } from '../../../services/event-bus.service.js'
+import { utilService } from '../../../services/util.service.js'
 
 export function MailIndex() {
 	const [mails, setMails] = useState([])
@@ -18,15 +18,16 @@ export function MailIndex() {
 	useEffect(() => {
 		setSearchParams(filterBy)
 		mailService.query(filterBy).then(mails => setMails(mails))
-	}, [filterBy])
+	}, [filterBy, setSearchParams])
 
 	function removeMail(mailId) {
 		setIsLoading(true)
 		mailService
 			.remove(mailId)
 			.then(() => {
-				utilService.animateCSS('fadeAway').then(() => setMails(prevMails => prevMails.filter(mail => mail.id !== mailId)))
-				setMails(prevMails => prevMails.filter(mail => mail.id !== mailId))
+				utilService.animateCSS('fadeAway').then(() => {
+					setMails(prevMails => prevMails.filter(mail => mail.id !== mailId))
+				})
 				showSuccessMsg(`Mail (${mailId}) removed successfully!`)
 			})
 			.catch(err => {
@@ -41,17 +42,15 @@ export function MailIndex() {
 	}
 
 	const isMails = mails.length > 0
+
 	return (
-		<section className='mail-index '>
+		<section className='mail-index'>
 			<h1>Mails</h1>
 			<Link to='/mail/edit'>
 				<button>Add a Mail</button>
 			</Link>
 			<MailFilter filterBy={filterBy} onFilter={onSetFilterBy} />
 			{isMails ? <MailList isLoading={isLoading} mails={mails} onRemove={removeMail} /> : <div>No mails to show...</div>}
-
-			{isMails && <MailList mails={mails} onRemove={removeMail} />}
-			{!isMails && <div>No mails to show...</div>}
 		</section>
 	)
 }
