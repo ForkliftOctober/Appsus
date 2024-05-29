@@ -42,8 +42,8 @@ const NoteActions = ({ noteId, onColorChange, onCopy, onTogglePin, onDelete, isP
         <button onClick={() => onColorChange(noteId)} title='Change Color'>
             <i className='fa-solid fa-palette'></i>
         </button>
-        <button onClick={() => onCopy()} title='Copy Note'>
-            <i class='fa-solid fa-copy'></i>
+        <button onClick={() => onCopy(noteId)} title='Copy Note'>
+            <i className='fa-solid fa-copy'></i>
         </button>
         <button onClick={() => onDelete(noteId)} title='Delete Note'>
             <i className='fa-solid fa-trash'></i>
@@ -57,7 +57,7 @@ const NoteTxt = ({ note, onColorChange, onCopy, onTogglePin, onDelete }) => (
         <NoteActions
             noteId={note.id}
             onColorChange={onColorChange}
-            onCopy={() => onCopy(note)}
+            onCopy={onCopy}
             onTogglePin={onTogglePin}
             onDelete={onDelete}
             isPinned={note.isPinned}
@@ -72,7 +72,7 @@ const NoteImg = ({ note, onColorChange, onCopy, onTogglePin, onDelete }) => (
         <NoteActions
             noteId={note.id}
             onColorChange={onColorChange}
-            onCopy={() => onCopy(note)}
+            onCopy={onCopy}
             onTogglePin={onTogglePin}
             onDelete={onDelete}
             isPinned={note.isPinned}
@@ -93,13 +93,14 @@ const NoteTodos = ({ note, onColorChange, onCopy, onTogglePin, onDelete }) => (
         <NoteActions
             noteId={note.id}
             onColorChange={onColorChange}
-            onCopy={() => onCopy(note)}
+            onCopy={onCopy}
             onTogglePin={onTogglePin}
             onDelete={onDelete}
             isPinned={note.isPinned}
         />
     </div>
 )
+
 export function NoteIndex() {
     const [notes, setNotes] = React.useState(() => {
         const savedNotes = localStorage.getItem('notes')
@@ -108,6 +109,26 @@ export function NoteIndex() {
 
     const handleDeleteNote = noteId => {
         setNotes(prevNotes => prevNotes.filter(note => note.id !== noteId))
+    }
+
+    const handleCopyNote = noteId => {
+        const noteToCopy = notes.find(note => note.id === noteId)
+        if (noteToCopy) {
+            const newNote = { ...noteToCopy, id: 'n' + new Date().getTime() }
+            setNotes(prevNotes => [...prevNotes, newNote])
+        }
+    }
+
+    const handleTogglePin = noteId => {
+        setNotes(prevNotes => {
+            const updatedNotes = prevNotes.map(note => {
+                if (note.id === noteId) {
+                    return { ...note, isPinned: !note.isPinned }
+                }
+                return note
+            })
+            return updatedNotes
+        })
     }
 
     React.useEffect(() => {
@@ -163,28 +184,56 @@ export function NoteIndex() {
             <div className='pinned-container'>
                 <h3>Pinned Notes</h3>
                 <div className='note-container'>
-                    {pinnedNotes.map(note => renderNote(note, handleDeleteNote))}
+                    {pinnedNotes.map(note =>
+                        renderNote(note, handleDeleteNote, handleCopyNote, handleTogglePin)
+                    )}
                 </div>
             </div>
 
             <div className='regular-container'>
                 <h3>Notes</h3>
                 <div className='note-container'>
-                    {regularNotes.map(note => renderNote(note, handleDeleteNote))}
+                    {regularNotes.map(note =>
+                        renderNote(note, handleDeleteNote, handleCopyNote, handleTogglePin)
+                    )}
                 </div>
             </div>
         </div>
     )
 }
 
-function renderNote(note, handleDeleteNote) {
+function renderNote(note, handleDeleteNote, handleCopyNote, handleTogglePin) {
     switch (note.type) {
         case 'NoteTxt':
-            return <NoteTxt key={note.id} note={note} onDelete={handleDeleteNote} />
+            return (
+                <NoteTxt
+                    key={note.id}
+                    note={note}
+                    onDelete={handleDeleteNote}
+                    onCopy={handleCopyNote}
+                    onTogglePin={handleTogglePin}
+                />
+            )
         case 'NoteImg':
-            return <NoteImg key={note.id} note={note} onDelete={handleDeleteNote} />
+            return (
+                <NoteImg
+                    key={note.id}
+                    note={note}
+                    onDelete={handleDeleteNote}
+                    onCopy={handleCopyNote}
+                    onTogglePin={handleTogglePin}
+                />
+            )
         case 'NoteTodos':
-            return <NoteTodos key={note.id} note={note} onDelete={handleDeleteNote} />
+            return (
+                <NoteTodos
+                    key={note.id}
+                    note={note}
+                    onDelete={handleDeleteNote}
+                    onCopy={handleCopyNote}
+                    onTogglePin={handleTogglePin}
+                />
+            )
         default:
             return (
                 <div key={note.id} className='note-card'>
