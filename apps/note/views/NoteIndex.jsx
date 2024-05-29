@@ -43,7 +43,7 @@ const NoteActions = ({ noteId, onColorChange, onCopy, onTogglePin, onDelete, isP
             <i className='fa-solid fa-palette'></i>
         </button>
         <button onClick={() => onCopy()} title='Copy Note'>
-            <i className='fa-regular fa-copy'></i>
+            <i class='fa-solid fa-copy'></i>
         </button>
         <button onClick={() => onDelete(noteId)} title='Delete Note'>
             <i className='fa-solid fa-trash'></i>
@@ -100,12 +100,15 @@ const NoteTodos = ({ note, onColorChange, onCopy, onTogglePin, onDelete }) => (
         />
     </div>
 )
-
 export function NoteIndex() {
     const [notes, setNotes] = React.useState(() => {
         const savedNotes = localStorage.getItem('notes')
         return savedNotes ? JSON.parse(savedNotes) : initialNotes
     })
+
+    const handleDeleteNote = noteId => {
+        setNotes(prevNotes => prevNotes.filter(note => note.id !== noteId))
+    }
 
     React.useEffect(() => {
         localStorage.setItem('notes', JSON.stringify(notes))
@@ -159,25 +162,29 @@ export function NoteIndex() {
 
             <div className='pinned-container'>
                 <h3>Pinned Notes</h3>
-                <div className='note-container'>{pinnedNotes.map(note => renderNote(note))}</div>
+                <div className='note-container'>
+                    {pinnedNotes.map(note => renderNote(note, handleDeleteNote))}
+                </div>
             </div>
 
             <div className='regular-container'>
                 <h3>Notes</h3>
-                <div className='note-container'>{regularNotes.map(note => renderNote(note))}</div>
+                <div className='note-container'>
+                    {regularNotes.map(note => renderNote(note, handleDeleteNote))}
+                </div>
             </div>
         </div>
     )
 }
 
-function renderNote(note) {
+function renderNote(note, handleDeleteNote) {
     switch (note.type) {
         case 'NoteTxt':
-            return <NoteTxt key={note.id} note={note} />
+            return <NoteTxt key={note.id} note={note} onDelete={handleDeleteNote} />
         case 'NoteImg':
-            return <NoteImg key={note.id} note={note} />
+            return <NoteImg key={note.id} note={note} onDelete={handleDeleteNote} />
         case 'NoteTodos':
-            return <NoteTodos key={note.id} note={note} />
+            return <NoteTodos key={note.id} note={note} onDelete={handleDeleteNote} />
         default:
             return (
                 <div key={note.id} className='note-card'>
