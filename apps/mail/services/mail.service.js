@@ -13,18 +13,20 @@ export const mailService = {
 	getDefaultFilter,
 	getSenderStats,
 	getFilterFromSearchParams,
+	moveToTrash,
+	markRead,
 }
 
 // For Debug (easy access from console):
 // window.cs = mailService
 
-function query(filterBy = {}) {
+function query(filterBy = {}, status = 'inbox') {
 	return storageService.query(MAIL_KEY).then(mails => {
+		mails = mails.filter(mail => mail.status === status)
 		if (filterBy.txt) {
 			const regExp = new RegExp(filterBy.txt, 'i')
 			mails = mails.filter(mail => regExp.test(mail.sender))
 		}
-
 		return mails
 	})
 }
@@ -41,11 +43,17 @@ function remove(mailId) {
 }
 
 function moveToTrash(mailId) {
-	// TODO: make mail move to trash
+	return get(mailId).then(mail => {
+		mail.status = 'trash'
+		return save(mail)
+	})
 }
 
 function markRead(mailId, isRead) {
-	// TODO: mark mail as read
+	return get(mailId).then(mail => {
+		mail.isRead = isRead
+		return save(mail)
+	})
 }
 
 function save(mail) {
@@ -57,7 +65,7 @@ function save(mail) {
 }
 
 function getEmptyMail(sender = '') {
-	return { sender }
+	return { sender, status: 'inbox' }
 }
 
 function getDefaultFilter(filterBy = { txt: '' }) {
@@ -104,7 +112,6 @@ function _createMail(sender) {
 	mail.removedAt = null
 	mail.sender = sender
 	mail.from = _createEmailName()
-	// mail.from = 'momo@momo.com'
 	mail.to = 'user@appsus.com'
 	console.log('mail: ', mail)
 	return mail
