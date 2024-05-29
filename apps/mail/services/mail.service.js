@@ -40,6 +40,14 @@ function remove(mailId) {
 	return storageService.remove(MAIL_KEY, mailId)
 }
 
+function moveToTrash(mailId) {
+	// TODO: make mail move to trash
+}
+
+function markRead(mailId, isRead) {
+	// TODO: mark mail as read
+}
+
 function save(mail) {
 	if (mail.id) {
 		return storageService.put(MAIL_KEY, mail)

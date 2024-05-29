@@ -1,6 +1,6 @@
-import {} from './.jsx'
+import { mailService } from '../services/mail.service.js'
 
-export function MailPreview({ mail }) {
+export function MailPreview({ mail, onRemove }) {
 	return (
 		<article onClick={() => onRemove(mail.id)} className='mail-preview'>
 			<h3 className='mail-unread'>{mail.sender}</h3>
