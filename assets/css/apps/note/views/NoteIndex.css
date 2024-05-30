@@ -69,6 +69,29 @@
     padding: 0 20px;
 }
 
+/* To-do */
+
+.note-card ul {
+    list-style-type: none;
+    padding: 0;
+    max-height: 200px;
+    overflow: auto;
+}
+
+.note-card li {
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+}
+
+.note-card li input[type='checkbox'] {
+    margin-right: 10px;
+}
+
+.note-card li.done {
+    text-decoration: line-through;
+}
+
 /* Pinned notes */
 
 .pinned-container,

@@ -80,13 +80,18 @@ const NoteImg = ({ note, onColorChange, onCopy, onTogglePin, onDelete }) => (
     </div>
 )
 
-const NoteTodos = ({ note, onColorChange, onCopy, onTogglePin, onDelete }) => (
+const NoteTodos = ({ note, onColorChange, onCopy, onTogglePin, onDelete, handleTodoToggle }) => (
     <div className='note-card' style={note.style || {}}>
         <h4>{note.info.title}</h4>
         <ul>
             {note.info.todos.map((todo, index) => (
-                <li key={index}>
-                    {todo.txt} - {todo.doneAt ? 'Done' : 'Pending'}
+                <li key={index} className={todo.doneAt ? 'done' : ''}>
+                    <input
+                        type='checkbox'
+                        checked={!!todo.doneAt}
+                        onChange={() => handleTodoToggle(note.id, index)}
+                    />
+                    <span onClick={() => handleTodoToggle(note.id, index)}>{todo.txt}</span>
                 </li>
             ))}
         </ul>
@@ -188,6 +193,24 @@ export function NoteIndex() {
         setIsColorPickerOpen(true)
     }
 
+    const handleTodoToggle = (noteId, todoIdx) => {
+        setNotes(prevNotes => {
+            const updatedNotes = prevNotes.map(note => {
+                if (note.id === noteId) {
+                    const updatedTodos = note.info.todos.map((todo, idx) => {
+                        if (idx === todoIdx) {
+                            return { ...todo, doneAt: todo.doneAt ? null : Date.now() }
+                        }
+                        return todo
+                    })
+                    return { ...note, info: { ...note.info, todos: updatedTodos } }
+                }
+                return note
+            })
+            return updatedNotes
+        })
+    }
+
     React.useEffect(() => {
         localStorage.setItem('notes', JSON.stringify(notes))
     }, [notes])
@@ -251,7 +274,8 @@ export function NoteIndex() {
                             handleDeleteNote,
                             handleCopyNote,
                             handleTogglePin,
-                            handleOpenColorPicker
+                            handleOpenColorPicker,
+                            handleTodoToggle
                         )
                     )}
                 </div>
@@ -266,7 +290,8 @@ export function NoteIndex() {
                             handleDeleteNote,
                             handleCopyNote,
                             handleTogglePin,
-                            handleOpenColorPicker
+                            handleOpenColorPicker,
+                            handleTodoToggle
                         )
                     )}
                 </div>
@@ -280,7 +305,8 @@ function renderNote(
     handleDeleteNote,
     handleCopyNote,
     handleTogglePin,
-    handleOpenColorPicker
+    handleOpenColorPicker,
+    handleTodoToggle
 ) {
     switch (note.type) {
         case 'NoteTxt':
@@ -314,6 +340,7 @@ function renderNote(
                     onCopy={handleCopyNote}
                     onTogglePin={handleTogglePin}
                     onColorChange={handleOpenColorPicker}
+                    handleTodoToggle={handleTodoToggle}
                 />
             )
         default:
