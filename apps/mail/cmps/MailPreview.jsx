@@ -9,7 +9,7 @@ export function MailPreview({ mail, onRemove, isLoading }) {
 		<article style={{ opacity: isLoading ? 0.5 : 1 }} onClick={() => onRemove(mail.id)} className='mail-preview mail-unread'>
 			<h3 className='mail-sender mail-unread'>{mail.sender}</h3>
 			<p className='mail-subject mail-unread'>{mail.subject}</p>
-			<p className='mail-body'>{mail.body && <LongTxt txt={mail.body} />}</p>
+			<p className='mail-body'> - {mail.body && <LongTxt txt={mail.body} />}</p>
 
 			{/* <LongTxt txt={mail.body} /> */}
 			{/* <button className='mail-list-btn' onClick={() => onRemove(mail.id)}>

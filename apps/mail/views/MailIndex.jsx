@@ -59,7 +59,7 @@ export function MailIndex() {
 				</ul>
 			</section>
 			<section className='mail-index'>
-				<h1>Mails</h1>
+				{/* <h1>Mails</h1> */}
 
 				<MailFilter filterBy={filterBy} onFilter={onSetFilterBy} />
 				{isMails ? <MailList isLoading={isLoading} mails={mails} onRemove={removeMail} /> : <div>No mails to show...</div>}

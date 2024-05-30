@@ -13,12 +13,12 @@ export function LongTxt({ txt, length = 100 }) {
 	}
 
 	return (
-		<p>
+		<span>
 			<span className='bold-txt'></span>
 			{text}
 			<span className='read-more' onClick={getFullTxt}>
 				{getMsg()}
 			</span>
-		</p>
+		</span>
 	)
 }

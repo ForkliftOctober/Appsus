@@ -1,7 +1,17 @@
 .mail-preview {
-	display: flex;
+	display: grid;
+	grid-template-columns: 200px 1fr;
+
 	cursor: pointer;
-	align-items: center; /* vertically center the content */
+	align-items: baseline;
+	justify-self: center;
+
+	border-block: solid var(--mail-mail-list-border);
+	border-width: 1px;
+	border-collapse: collapse;
+
+	font-family: roboto, sans-serif;
+	font-size: 0.9em;
 }
 
 ul {
@@ -12,16 +22,25 @@ h3,
 p {
 	margin: 0;
 	padding: 0;
-	font-size: 0.9em;
 }
 
 .mail-sender {
-	flex: 0 0 auto; /* fixed width, will not grow or shrink */
-	margin-right: 200px; /* add a 200px gap */
+	grid-column: 1;
+	font-weight: 400;
 }
 
-.mail-unread {
-	font-weight: bold;
+.mail-subject,
+.mail-body {
+	grid-column: 2;
+	display: flex;
+	align-items: center;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.mail-subject .mail-unread {
+	font-weight: 400;
 }
 
 .mail-read {
@@ -29,19 +48,5 @@ p {
 }
 
 .mail-subject {
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-
-	font-weight: bold;
-	flex: 1 1 auto; /* flexible width, will grow and shrink */
-}
-
-.mail-body {
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-
-	color: var(--mail-mail-list-color);
-	flex: 1 1 auto; /* flexible width, will grow and shrink */
+	font-weight: regular;
 }

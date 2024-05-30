@@ -4,21 +4,16 @@
 	list-style-type: none;
 	padding: 0;
 	margin: 0;
-
 	background-color: var(--mail-mail-list-bg);
 }
 
 .mail-list-item {
-	display: flex;
 	align-items: center;
 	gap: 10px;
-
-	padding: 10px;
 	background-color: var(--mail-mail-list-item-bg);
 }
 
 .mail-list .btn {
-	margin-left: auto;
 	border: none;
 	background: none;
 	cursor: pointer;
