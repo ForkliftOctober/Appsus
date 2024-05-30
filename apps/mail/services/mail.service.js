@@ -14,7 +14,7 @@ export const mailService = {
 	getSenderStats,
 	getFilterFromSearchParams,
 	moveToTrash,
-	markRead,
+	onRead,
 }
 
 // For Debug (easy access from console):
@@ -49,7 +49,7 @@ function moveToTrash(mailId) {
 	})
 }
 
-function markRead(mailId, isRead) {
+function onRead(mailId, isRead) {
 	return get(mailId).then(mail => {
 		mail.isRead = isRead
 		return save(mail)
@@ -94,7 +94,7 @@ function _createMails() {
 	if (!mails || !mails.length) {
 		mails = []
 		const senders = ['Lulu', 'Allen', 'Donald', 'Julian']
-		for (let i = 0; i < 6; i++) {
+		for (let i = 0; i < 16; i++) {
 			const sender = senders[i % senders.length]
 			mails.push(_createMail(sender))
 		}
@@ -105,7 +105,7 @@ function _createMails() {
 function _createMail(sender) {
 	const mail = getEmptyMail(sender)
 	mail.id = utilService.makeId()
-	mail.subject = utilService.makeLorem(utilService.getRandomIntInclusive(5, 20))
+	mail.subject = utilService.makeLorem(utilService.getRandomIntInclusive(1, 8))
 	mail.body = utilService.makeLorem(utilService.getRandomIntInclusive(5, 100))
 	mail.isRead = false
 	mail.sentAt = utilService.getRandomIntInclusive(155113393059, 155118393059)

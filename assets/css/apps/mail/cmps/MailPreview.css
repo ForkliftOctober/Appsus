@@ -1,21 +1,47 @@
 .mail-preview {
 	display: flex;
 	cursor: pointer;
+	align-items: center; /* vertically center the content */
 }
 
-h3 {
-	font-weight: normal;
+ul {
+	list-style-type: none;
 }
 
-.mail-preview img:hover {
-	background-color: red;
+h3,
+p {
+	margin: 0;
+	padding: 0;
+	font-size: 0.9em;
+}
+
+.mail-sender {
+	flex: 0 0 auto; /* fixed width, will not grow or shrink */
+	margin-right: 200px; /* add a 200px gap */
 }
 
 .mail-unread {
 	font-weight: bold;
-	color: red;
 }
 
 .mail-read {
 	font-weight: normal;
+}
+
+.mail-subject {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+
+	font-weight: bold;
+	flex: 1 1 auto; /* flexible width, will grow and shrink */
+}
+
+.mail-body {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+
+	color: var(--mail-mail-list-color);
+	flex: 1 1 auto; /* flexible width, will grow and shrink */
 }

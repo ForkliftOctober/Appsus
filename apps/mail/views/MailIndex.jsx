@@ -43,6 +43,9 @@ export function MailIndex() {
 	return (
 		<div className='mail-page'>
 			<section className='mail-menu'>
+				<Link to='/mail/edit'>
+					<button className='compose-btn'>Compose</button>
+				</Link>
 				<ul>
 					<li>
 						<Link to='/mail/inbox'>Inbox</Link>
@@ -57,12 +60,12 @@ export function MailIndex() {
 			</section>
 			<section className='mail-index'>
 				<h1>Mails</h1>
-				<Link to='/mail/edit'>
-					<button>Add a Mail</button>
-				</Link>
+
 				<MailFilter filterBy={filterBy} onFilter={onSetFilterBy} />
 				{isMails ? <MailList isLoading={isLoading} mails={mails} onRemove={removeMail} /> : <div>No mails to show...</div>}
 			</section>
 		</div>
 	)
 }
+
+// TODO: add numbers of unread mails
