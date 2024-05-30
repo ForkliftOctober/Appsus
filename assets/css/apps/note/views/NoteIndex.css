@@ -1,3 +1,5 @@
+/* Notes */
+
 .note-card {
     display: flex;
     flex-direction: column;
@@ -10,7 +12,7 @@
     min-height: 100px;
     height: auto;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(0, 0, 0, 0.2);
-    transition: box-shadow 0.3s ease, border 0.3s ease;
+    transition: box-shadow 0.3s ease, border 0.3s ease, background-color 0.3s ease;
 }
 
 .note-card:hover {
@@ -67,6 +69,8 @@
     padding: 0 20px;
 }
 
+/* Pinned notes */
+
 .pinned-container,
 .regular-container {
     width: 100%;
@@ -85,6 +89,8 @@
     color: #202124;
     font-size: 15px;
 }
+
+/* Note buttons */
 
 .note-card .note-actions {
     display: flex;
@@ -127,4 +133,52 @@
         opacity: 1;
         pointer-events: auto;
     }
+}
+
+/* Color picker */
+
+.color-picker-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.color-picker-close {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    cursor: pointer;
+    font-size: 20px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid transparent;
+    border-radius: 50%;
+}
+
+.color-picker-close:hover {
+    border: 1px solid #ccc;
+}
+
+.color-picker {
+    display: flex;
+    justify-content: space-around;
+}
+
+.color-swatch {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    margin: 6px;
 }

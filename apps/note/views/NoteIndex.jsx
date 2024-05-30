@@ -4,7 +4,7 @@ const initialNotes = [
         createdAt: 1112222,
         type: 'NoteTxt',
         isPinned: true,
-        style: { backgroundColor: '#f00d' },
+        style: { backgroundColor: '#CCFF90' },
         info: {
             txt: 'Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! ',
         },
@@ -17,7 +17,7 @@ const initialNotes = [
             url: 'https://www.ynet.co.il/PicServer2/24012010/2522593/bobi_gd.jpg',
             title: 'Bobi and Me',
         },
-        style: { backgroundColor: '#f00d' },
+        style: { backgroundColor: '#F28B82' },
     },
     {
         id: 'n103',
@@ -39,10 +39,10 @@ const NoteActions = ({ noteId, onColorChange, onCopy, onTogglePin, onDelete, isP
         <button onClick={() => onTogglePin(noteId)} title={isPinned ? 'Unpin Note' : 'Pin Note'}>
             <i className='fa-solid fa-thumbtack'></i>
         </button>
-        <button onClick={() => onColorChange(noteId)} title='Change Color'>
+        <button onClick={() => onColorChange(noteId)} title='Background options'>
             <i className='fa-solid fa-palette'></i>
         </button>
-        <button onClick={() => onCopy(noteId)} title='Copy Note'>
+        <button onClick={() => onCopy(noteId)} title='Make a copy'>
             <i className='fa-solid fa-copy'></i>
         </button>
         <button onClick={() => onDelete(noteId)} title='Delete Note'>
@@ -101,11 +101,50 @@ const NoteTodos = ({ note, onColorChange, onCopy, onTogglePin, onDelete }) => (
     </div>
 )
 
+const colors = [
+    '#F28B82', // Red
+    '#FBBC04', // Orange
+    '#FFF475', // Yellow
+    '#CCFF90', // Green
+    '#A7FFEB', // Teal
+    '#CBF0F8', // Light Blue
+    '#AECBFA', // Blue
+    '#D7AEFB', // Purple
+    '#FDCFE8', // Pink
+    '#E6C9A8', // Brown
+    '#E8EAED', // Gray
+]
+
+function ColorPicker({ onSelectColor, onClose }) {
+    return (
+        <div className='color-picker-modal'>
+            <div className='color-picker-close' onClick={onClose} title='Close color picker'>
+                ×
+            </div>
+            <div className='color-picker'>
+                {colors.map((color, idx) => (
+                    <div
+                        key={idx}
+                        className='color-swatch'
+                        style={{ backgroundColor: color }}
+                        onClick={() => onSelectColor(color)}
+                    ></div>
+                ))}
+            </div>
+        </div>
+    )
+}
+
 export function NoteIndex() {
     const [notes, setNotes] = React.useState(() => {
         const savedNotes = localStorage.getItem('notes')
         return savedNotes ? JSON.parse(savedNotes) : initialNotes
     })
+
+    const [currentNote, setCurrentNote] = React.useState('')
+    const textareaRef = React.useRef(null)
+    const [isColorPickerOpen, setIsColorPickerOpen] = React.useState(false)
+    const [selectedNoteId, setSelectedNoteId] = React.useState(null)
 
     const handleDeleteNote = noteId => {
         setNotes(prevNotes => prevNotes.filter(note => note.id !== noteId))
@@ -131,12 +170,27 @@ export function NoteIndex() {
         })
     }
 
+    const handleChangeColor = (noteId, color) => {
+        setNotes(prevNotes => {
+            const updatedNotes = prevNotes.map(note => {
+                if (note.id === noteId) {
+                    return { ...note, style: { ...note.style, backgroundColor: color } }
+                }
+                return note
+            })
+            return updatedNotes
+        })
+        setIsColorPickerOpen(false)
+    }
+
+    const handleOpenColorPicker = noteId => {
+        setSelectedNoteId(noteId)
+        setIsColorPickerOpen(true)
+    }
+
     React.useEffect(() => {
         localStorage.setItem('notes', JSON.stringify(notes))
     }, [notes])
-
-    const [currentNote, setCurrentNote] = React.useState('')
-    const textareaRef = React.useRef(null)
 
     const handleChange = event => {
         setCurrentNote(event.target.value)
@@ -181,11 +235,24 @@ export function NoteIndex() {
                 rows={1}
             ></textarea>
 
+            {isColorPickerOpen && (
+                <ColorPicker
+                    onSelectColor={color => handleChangeColor(selectedNoteId, color)}
+                    onClose={() => setIsColorPickerOpen(false)}
+                />
+            )}
+
             <div className='pinned-container'>
                 <h3>Pinned Notes</h3>
                 <div className='note-container'>
                     {pinnedNotes.map(note =>
-                        renderNote(note, handleDeleteNote, handleCopyNote, handleTogglePin)
+                        renderNote(
+                            note,
+                            handleDeleteNote,
+                            handleCopyNote,
+                            handleTogglePin,
+                            handleOpenColorPicker
+                        )
                     )}
                 </div>
             </div>
@@ -194,7 +261,13 @@ export function NoteIndex() {
                 <h3>Notes</h3>
                 <div className='note-container'>
                     {regularNotes.map(note =>
-                        renderNote(note, handleDeleteNote, handleCopyNote, handleTogglePin)
+                        renderNote(
+                            note,
+                            handleDeleteNote,
+                            handleCopyNote,
+                            handleTogglePin,
+                            handleOpenColorPicker
+                        )
                     )}
                 </div>
             </div>
@@ -202,7 +275,13 @@ export function NoteIndex() {
     )
 }
 
-function renderNote(note, handleDeleteNote, handleCopyNote, handleTogglePin) {
+function renderNote(
+    note,
+    handleDeleteNote,
+    handleCopyNote,
+    handleTogglePin,
+    handleOpenColorPicker
+) {
     switch (note.type) {
         case 'NoteTxt':
             return (
@@ -212,6 +291,7 @@ function renderNote(note, handleDeleteNote, handleCopyNote, handleTogglePin) {
                     onDelete={handleDeleteNote}
                     onCopy={handleCopyNote}
                     onTogglePin={handleTogglePin}
+                    onColorChange={handleOpenColorPicker}
                 />
             )
         case 'NoteImg':
@@ -222,6 +302,7 @@ function renderNote(note, handleDeleteNote, handleCopyNote, handleTogglePin) {
                     onDelete={handleDeleteNote}
                     onCopy={handleCopyNote}
                     onTogglePin={handleTogglePin}
+                    onColorChange={handleOpenColorPicker}
                 />
             )
         case 'NoteTodos':
@@ -232,6 +313,7 @@ function renderNote(note, handleDeleteNote, handleCopyNote, handleTogglePin) {
                     onDelete={handleDeleteNote}
                     onCopy={handleCopyNote}
                     onTogglePin={handleTogglePin}
+                    onColorChange={handleOpenColorPicker}
                 />
             )
         default:
