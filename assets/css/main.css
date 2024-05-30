@@ -15,6 +15,10 @@
 @import './views/home.css';
 
 @import './apps/note/views/NoteIndex.css';
+@import './apps/note/views/NoteCard.css';
+@import './apps/note/views/ColorPicker.css';
+@import './apps/note/views/NoteContainer.css';
+@import './apps/note/views/NoteTodos.css';
 
 @import './apps/mail/views/MailIndex.css';
 @import './apps/mail/views/MailIndex.css';
