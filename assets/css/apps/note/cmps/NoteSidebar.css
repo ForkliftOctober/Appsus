@@ -1,0 +1,27 @@
+.note-sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.note-sidebar ul li {
+    margin-bottom: 10px;
+}
+
+.note-sidebar ul li button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.note-sidebar ul li button.active {
+    background-color: #e0e0e0;
+    font-weight: bold;
+}
+
+.note-sidebar ul li button:hover {
+    background-color: #ddd;
+}

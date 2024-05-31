@@ -1,6 +1,7 @@
 import { initialNotes } from '../services/note.service.js'
 import { ColorPicker } from '../cmps/ColorPicker.jsx'
 import { NoteActions, NoteTxt, NoteImg, NoteTodos } from '../cmps/NoteList.jsx'
+import { NoteSidebar } from '../cmps/NoteSidebar.jsx'
 
 export function NoteIndex() {
     const [notes, setNotes] = React.useState(() => {
@@ -12,6 +13,7 @@ export function NoteIndex() {
     const textareaRef = React.useRef(null)
     const [isColorPickerOpen, setIsColorPickerOpen] = React.useState(false)
     const [selectedNoteId, setSelectedNoteId] = React.useState(null)
+    const [filter, setFilter] = React.useState('all')
 
     const handleDeleteNote = noteId => {
         setNotes(prevNotes => prevNotes.filter(note => note.id !== noteId))
@@ -108,54 +110,66 @@ export function NoteIndex() {
     const pinnedNotes = notes.filter(note => note.isPinned)
     const regularNotes = notes.filter(note => !note.isPinned)
 
+    const filteredNotes = notes => {
+        if (filter === 'all') return notes
+        if (filter === 'text') return notes.filter(note => note.type === 'NoteTxt')
+        if (filter === 'image') return notes.filter(note => note.type === 'NoteImg')
+        if (filter === 'todo') return notes.filter(note => note.type === 'NoteTodos')
+    }
+
     return (
         <div className='note-index'>
-            <textarea
-                ref={textareaRef}
-                className='note-input'
-                placeholder='Take a note...'
-                value={currentNote}
-                onChange={handleChange}
-                style={{ resize: 'none', overflow: 'hidden' }}
-                rows={1}
-            ></textarea>
-
-            {isColorPickerOpen && (
-                <ColorPicker
-                    onSelectColor={color => handleChangeColor(selectedNoteId, color)}
-                    onClose={() => setIsColorPickerOpen(false)}
-                />
-            )}
-
-            <div className='pinned-container'>
-                <h3>Pinned Notes</h3>
-                <div className='note-container'>
-                    {pinnedNotes.map(note =>
-                        renderNote(
-                            note,
-                            handleDeleteNote,
-                            handleCopyNote,
-                            handleTogglePin,
-                            handleOpenColorPicker,
-                            handleTodoToggle
-                        )
-                    )}
-                </div>
+            <div className='sidebar-container'>
+                <NoteSidebar filter={filter} setFilter={setFilter} />
             </div>
+            <div className='content-container'>
+                <textarea
+                    ref={textareaRef}
+                    className='note-input'
+                    placeholder='Take a note...'
+                    value={currentNote}
+                    onChange={handleChange}
+                    style={{ resize: 'none', overflow: 'hidden' }}
+                    rows={1}
+                ></textarea>
 
-            <div className='regular-container'>
-                <h3>Notes</h3>
-                <div className='note-container'>
-                    {regularNotes.map(note =>
-                        renderNote(
-                            note,
-                            handleDeleteNote,
-                            handleCopyNote,
-                            handleTogglePin,
-                            handleOpenColorPicker,
-                            handleTodoToggle
-                        )
-                    )}
+                {isColorPickerOpen && (
+                    <ColorPicker
+                        onSelectColor={color => handleChangeColor(selectedNoteId, color)}
+                        onClose={() => setIsColorPickerOpen(false)}
+                    />
+                )}
+
+                <div className='pinned-container'>
+                    <h3>Pinned Notes</h3>
+                    <div className='note-container'>
+                        {filteredNotes(pinnedNotes).map(note =>
+                            renderNote(
+                                note,
+                                handleDeleteNote,
+                                handleCopyNote,
+                                handleTogglePin,
+                                handleOpenColorPicker,
+                                handleTodoToggle
+                            )
+                        )}
+                    </div>
+                </div>
+
+                <div className='regular-container'>
+                    <h3>Notes</h3>
+                    <div className='note-container'>
+                        {filteredNotes(regularNotes).map(note =>
+                            renderNote(
+                                note,
+                                handleDeleteNote,
+                                handleCopyNote,
+                                handleTogglePin,
+                                handleOpenColorPicker,
+                                handleTodoToggle
+                            )
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
