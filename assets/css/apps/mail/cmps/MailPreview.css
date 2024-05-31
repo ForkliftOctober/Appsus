@@ -1,21 +1,52 @@
 .mail-preview {
-	display: flex;
+	display: grid;
+	grid-template-columns: 200px 1fr;
+
 	cursor: pointer;
+	align-items: baseline;
+	justify-self: center;
+
+	border-block: solid var(--mail-mail-list-border);
+	border-width: 1px;
+	border-collapse: collapse;
+
+	font-family: roboto, sans-serif;
+	font-size: 0.9em;
 }
 
-h3 {
-	font-weight: normal;
+ul {
+	list-style-type: none;
 }
 
-.mail-preview img:hover {
-	background-color: red;
+h3,
+p {
+	margin: 0;
+	padding: 0;
 }
 
-.mail-unread {
-	font-weight: bold;
-	color: red;
+.mail-sender {
+	grid-column: 1;
+	font-weight: 400;
+}
+
+.mail-subject,
+.mail-body {
+	grid-column: 2;
+	display: flex;
+	align-items: center;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.mail-subject .mail-unread {
+	font-weight: 400;
 }
 
 .mail-read {
 	font-weight: normal;
+}
+
+.mail-subject {
+	font-weight: regular;
 }

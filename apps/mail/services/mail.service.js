@@ -13,18 +13,20 @@ export const mailService = {
 	getDefaultFilter,
 	getSenderStats,
 	getFilterFromSearchParams,
+	moveToTrash,
+	onRead,
 }
 
 // For Debug (easy access from console):
 // window.cs = mailService
 
-function query(filterBy = {}) {
+function query(filterBy = {}, status = 'inbox') {
 	return storageService.query(MAIL_KEY).then(mails => {
+		mails = mails.filter(mail => mail.status === status)
 		if (filterBy.txt) {
 			const regExp = new RegExp(filterBy.txt, 'i')
 			mails = mails.filter(mail => regExp.test(mail.sender))
 		}
-
 		return mails
 	})
 }
@@ -40,6 +42,20 @@ function remove(mailId) {
 	return storageService.remove(MAIL_KEY, mailId)
 }
 
+function moveToTrash(mailId) {
+	return get(mailId).then(mail => {
+		mail.status = 'trash'
+		return save(mail)
+	})
+}
+
+function onRead(mailId, isRead) {
+	return get(mailId).then(mail => {
+		mail.isRead = isRead
+		return save(mail)
+	})
+}
+
 function save(mail) {
 	if (mail.id) {
 		return storageService.put(MAIL_KEY, mail)
@@ -49,7 +65,7 @@ function save(mail) {
 }
 
 function getEmptyMail(sender = '') {
-	return { sender }
+	return { sender, status: 'inbox' }
 }
 
 function getDefaultFilter(filterBy = { txt: '' }) {
@@ -78,7 +94,7 @@ function _createMails() {
 	if (!mails || !mails.length) {
 		mails = []
 		const senders = ['Lulu', 'Allen', 'Donald', 'Julian']
-		for (let i = 0; i < 6; i++) {
+		for (let i = 0; i < 16; i++) {
 			const sender = senders[i % senders.length]
 			mails.push(_createMail(sender))
 		}
@@ -89,14 +105,13 @@ function _createMails() {
 function _createMail(sender) {
 	const mail = getEmptyMail(sender)
 	mail.id = utilService.makeId()
-	mail.subject = utilService.makeLorem(utilService.getRandomIntInclusive(5, 20))
+	mail.subject = utilService.makeLorem(utilService.getRandomIntInclusive(1, 8))
 	mail.body = utilService.makeLorem(utilService.getRandomIntInclusive(5, 100))
 	mail.isRead = false
 	mail.sentAt = utilService.getRandomIntInclusive(155113393059, 155118393059)
 	mail.removedAt = null
 	mail.sender = sender
 	mail.from = _createEmailName()
-	// mail.from = 'momo@momo.com'
 	mail.to = 'user@appsus.com'
 	console.log('mail: ', mail)
 	return mail

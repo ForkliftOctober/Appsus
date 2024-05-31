@@ -1,3 +1,22 @@
 :root {
-    --main-bg-color: lightblue;
+	--mail-bg-color: #f6f8fc;
+
+	/* compose */
+	--mail-compose-bg: #c2e7ff;
+	--mail-compose-color: #001d35;
+
+	/* mail-list */
+	--mail-mail-list-color: #202124;
+	--mail-mail-list-read: #f2f6fc;
+	--mail-mail-list-unread: #ffffff;
+	--mail-mail-list-bg: #ffffff;
+	--mail-mail-list-border: #eceff1;
+
+	/* mail-sidebar */
+	/* --mail-sidebar-bg: #f6f8fc; */
+	--mail-sidebar-color: #202124;
+
+	/* mail-search-bar */
+	/* --mail-search-bar-bg: #f6f8fc; */
+	--mail-search-bar-color: #eaf1fb;
 }

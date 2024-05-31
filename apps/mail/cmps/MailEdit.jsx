@@ -2,7 +2,7 @@ const { useState, useEffect } = React
 const { useParams, useNavigate } = ReactRouter
 
 import { mailService } from '../services/mail.service.js'
-import { showErrorMsg } from '../services/event-bus.service.js'
+import { showErrorMsg } from '../../../services/event-bus.service.js'
 
 export function MailEdit() {
 	const [mail, setMail] = useState(mailService.getEmptyMail())
