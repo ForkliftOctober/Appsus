@@ -7,7 +7,7 @@ export function NoteSidebar({ filter, setFilter }) {
                         onClick={() => setFilter('all')}
                         className={filter === 'all' ? 'active' : ''}
                     >
-                        <i className='fas fa-sticky-note'></i> Notes
+                        <i className='fas fa-sticky-note'></i> All Notes
                     </button>
                 </li>
                 <li>
@@ -15,7 +15,7 @@ export function NoteSidebar({ filter, setFilter }) {
                         onClick={() => setFilter('text')}
                         className={filter === 'text' ? 'active' : ''}
                     >
-                        <i className='fas fa-bell'></i> Reminders
+                        <i class='fa-solid fa-file-word'></i> Text
                     </button>
                 </li>
                 <li>
@@ -23,7 +23,7 @@ export function NoteSidebar({ filter, setFilter }) {
                         onClick={() => setFilter('image')}
                         className={filter === 'image' ? 'active' : ''}
                     >
-                        <i className='fas fa-tag'></i> Images
+                        <i class='fa-regular fa-image'></i> Images
                     </button>
                 </li>
                 <li>
