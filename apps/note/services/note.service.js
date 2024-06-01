@@ -6,7 +6,7 @@ export const initialNotes = [
         isPinned: true,
         style: { backgroundColor: '#CCFF90' },
         info: {
-            txt: 'Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! Fullstack Me Baby! ',
+            txt: 'Fullstack Me Baby!',
         },
     },
     {
@@ -31,5 +31,30 @@ export const initialNotes = [
                 { txt: 'Coding power', doneAt: 187111111 },
             ],
         },
+    },
+    {
+        id: 'n104',
+        type: 'NoteImg',
+        isPinned: false,
+        info: {
+            url: 'https://new-edifier-us-oss.edifier.com/images/20230801/77bb9998353cae7dedfee503d30a4348.png',
+            title: 'R1280DB',
+        },
+        style: { backgroundColor: '#D7AEFB' },
+    },
+    {
+        id: 'n105',
+        type: 'NoteTodos',
+        isPinned: true,
+        info: {
+            title: 'Shopping list',
+            todos: [
+                { txt: 'במבה', doneAt: null },
+                { txt: 'שוקולית', doneAt: null },
+                { txt: 'חלב', doneAt: 187111111 },
+                { txt: 'פרמזן', doneAt: null },
+            ],
+        },
+        style: { backgroundColor: '#FFF475' },
     },
 ]
