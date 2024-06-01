@@ -3,6 +3,8 @@ import { ColorPicker } from '../cmps/ColorPicker.jsx'
 import { NoteActions, NoteTxt, NoteImg, NoteTodos } from '../cmps/NoteList.jsx'
 import { NoteSidebar } from '../cmps/NoteSidebar.jsx'
 
+const MAX_STORAGE_SIZE = 5 * 1024 * 1024
+
 export function NoteIndex() {
     const [notes, setNotes] = React.useState(() => {
         const savedNotes = localStorage.getItem('notes')
@@ -10,7 +12,9 @@ export function NoteIndex() {
     })
 
     const [currentNote, setCurrentNote] = React.useState('')
+    const [uploadedImage, setUploadedImage] = React.useState(null)
     const textareaRef = React.useRef(null)
+    const fileInputRef = React.useRef(null)
     const [isColorPickerOpen, setIsColorPickerOpen] = React.useState(false)
     const [selectedNoteId, setSelectedNoteId] = React.useState(null)
     const [filter, setFilter] = React.useState('all')
@@ -84,37 +88,73 @@ export function NoteIndex() {
         setIsFocused(false)
     }
 
-    React.useEffect(() => {
-        localStorage.setItem('notes', JSON.stringify(notes))
-    }, [notes])
-
     const handleChange = event => {
         setCurrentNote(event.target.value)
         textareaRef.current.style.height = 'auto'
         textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px'
     }
 
-    React.useEffect(() => {
-        const handleOutsideClick = event => {
-            if (currentNote.trim() && !textareaRef.current.contains(event.target)) {
-                const newNote = {
-                    id: 'n' + new Date().getTime(),
-                    createdAt: Date.now(),
-                    type: 'NoteTxt',
-                    isPinned: false,
-                    info: {
-                        txt: currentNote.trim(),
-                    },
-                }
-                setNotes(prevNotes => [...prevNotes, newNote])
-                setCurrentNote('')
-                textareaRef.current.style.height = 'auto'
+    const handleFileChange = event => {
+        const file = event.target.files[0]
+        if (file) {
+            const reader = new FileReader()
+            reader.onload = e => {
+                setUploadedImage(e.target.result)
             }
+            reader.readAsDataURL(file)
         }
+    }
 
+    const handleDeleteImage = () => {
+        setUploadedImage(null)
+        if (fileInputRef.current) fileInputRef.current.value = ''
+    }
+
+    const isLocalStorageFull = () => {
+        try {
+            localStorage.setItem('test', 'test')
+            localStorage.removeItem('test')
+            return false
+        } catch (e) {
+            return true
+        }
+    }
+
+    const handleOutsideClick = event => {
+        if (currentNote.trim() && (!textareaRef.current.contains(event.target) || uploadedImage)) {
+            if (isLocalStorageFull()) {
+                alert('Local storage is full. Please clear some notes.')
+                return
+            }
+            const newNote = {
+                id: 'n' + new Date().getTime(),
+                createdAt: Date.now(),
+                type: uploadedImage ? 'NoteImg' : 'NoteTxt',
+                isPinned: false,
+                info: {
+                    txt: currentNote.trim(),
+                    url: uploadedImage || '',
+                    title: uploadedImage ? currentNote.trim() : '',
+                },
+            }
+            setNotes(prevNotes => [...prevNotes, newNote])
+            setCurrentNote('')
+            setUploadedImage(null)
+            textareaRef.current.style.height = 'auto'
+            if (fileInputRef.current) fileInputRef.current.value = ''
+        }
+    }
+
+    React.useEffect(() => {
         document.addEventListener('click', handleOutsideClick)
         return () => document.removeEventListener('click', handleOutsideClick)
-    }, [currentNote])
+    }, [currentNote, uploadedImage])
+
+    React.useEffect(() => {
+        if (!isLocalStorageFull()) {
+            localStorage.setItem('notes', JSON.stringify(notes))
+        }
+    }, [notes])
 
     const pinnedNotes = notes.filter(note => note.isPinned)
     const regularNotes = notes.filter(note => !note.isPinned)
@@ -132,18 +172,42 @@ export function NoteIndex() {
                 <NoteSidebar filter={filter} setFilter={setFilter} />
             </div>
             <div className='content-container'>
-                <textarea
-                    ref={textareaRef}
-                    className={`note-input ${isFocused ? 'focused' : ''}`}
-                    placeholder='Take a note...'
-                    value={currentNote}
-                    onChange={handleChange}
-                    onFocus={handleFocus}
-                    onBlur={handleBlur}
-                    style={{ resize: 'none', overflow: 'hidden' }}
-                    rows={isFocused ? 5 : 1}
-                ></textarea>
-
+                <div className={`note-input-container ${isFocused ? 'focused' : ''}`}>
+                    <textarea
+                        ref={textareaRef}
+                        className='note-input'
+                        placeholder='Take a note...'
+                        value={currentNote}
+                        onChange={handleChange}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
+                        style={{ resize: 'none', overflow: 'hidden' }}
+                        rows={isFocused ? 5 : 1}
+                    ></textarea>
+                    <div className='file-input-container'>
+                        {uploadedImage && (
+                            <div className='uploaded-image-wrapper'>
+                                <img
+                                    src={uploadedImage}
+                                    alt='Uploaded'
+                                    className='uploaded-image-preview'
+                                />
+                                <button className='delete-image-button' onClick={handleDeleteImage}>
+                                    ×
+                                </button>
+                            </div>
+                        )}
+                        <label className='file-input-label'>
+                            <i className='fa fa-image'></i>
+                            <input
+                                type='file'
+                                accept='image/*'
+                                onChange={handleFileChange}
+                                ref={fileInputRef}
+                            />
+                        </label>
+                    </div>
+                </div>
                 {isColorPickerOpen && (
                     <ColorPicker
                         onSelectColor={color => handleChangeColor(selectedNoteId, color)}

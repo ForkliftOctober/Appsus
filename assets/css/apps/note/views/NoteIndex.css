@@ -22,13 +22,58 @@
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 
-.pinned-container,
-.regular-container {
-    margin-top: 20px;
+.note-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
 }
 
-.note-container {
+.note-input {
+    width: 100%;
+    padding-right: 60px; 
+}
+
+.file-input-container {
+    position: absolute;
+    right: 10px;
     display: flex;
-    flex-wrap: wrap;
+    align-items: center;
     gap: 10px;
+}
+
+.uploaded-image-preview {
+    width: 24px;
+    height: 24px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.file-input-label {
+    cursor: pointer;
+}
+
+.file-input-label i {
+    font-size: 24px;
+    color: #888;
+}
+
+.file-input-label input[type="file"] {
+    display: none; 
+}
+
+.delete-image-button {
+    position: absolute;
+    top: -8px;
+    right: 30px;
+    background: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    cursor: pointer;
 }
