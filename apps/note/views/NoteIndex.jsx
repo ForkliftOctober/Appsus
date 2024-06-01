@@ -74,6 +74,15 @@ export function NoteIndex() {
             return updatedNotes
         })
     }
+    const [isFocused, setIsFocused] = React.useState(false)
+
+    const handleFocus = () => {
+        setIsFocused(true)
+    }
+
+    const handleBlur = () => {
+        setIsFocused(false)
+    }
 
     React.useEffect(() => {
         localStorage.setItem('notes', JSON.stringify(notes))
@@ -125,12 +134,14 @@ export function NoteIndex() {
             <div className='content-container'>
                 <textarea
                     ref={textareaRef}
-                    className='note-input'
+                    className={`note-input ${isFocused ? 'focused' : ''}`}
                     placeholder='Take a note...'
                     value={currentNote}
                     onChange={handleChange}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
                     style={{ resize: 'none', overflow: 'hidden' }}
-                    rows={1}
+                    rows={isFocused ? 5 : 1}
                 ></textarea>
 
                 {isColorPickerOpen && (
