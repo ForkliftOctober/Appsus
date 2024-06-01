@@ -95,6 +95,7 @@ export function NoteIndex() {
     }
 
     const handleFileChange = event => {
+        event.stopPropagation()
         const file = event.target.files[0]
         if (file) {
             const reader = new FileReader()
@@ -105,7 +106,8 @@ export function NoteIndex() {
         }
     }
 
-    const handleDeleteImage = () => {
+    const handleDeleteImage = event => {
+        event.stopPropagation()
         setUploadedImage(null)
         if (fileInputRef.current) fileInputRef.current.value = ''
     }
@@ -121,7 +123,11 @@ export function NoteIndex() {
     }
 
     const handleOutsideClick = event => {
-        if (currentNote.trim() && (!textareaRef.current.contains(event.target) || uploadedImage)) {
+        if (
+            (currentNote.trim() || uploadedImage) &&
+            !textareaRef.current.contains(event.target) &&
+            !fileInputRef.current.contains(event.target)
+        ) {
             if (isLocalStorageFull()) {
                 alert('Local storage is full. Please clear some notes.')
                 return
@@ -184,7 +190,10 @@ export function NoteIndex() {
                         style={{ resize: 'none', overflow: 'hidden' }}
                         rows={isFocused ? 5 : 1}
                     ></textarea>
-                    <div className='file-input-container'>
+                    <div
+                        className='file-input-container'
+                        onClick={event => event.stopPropagation()}
+                    >
                         {uploadedImage && (
                             <div className='uploaded-image-wrapper'>
                                 <img
